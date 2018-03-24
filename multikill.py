@@ -15,10 +15,11 @@ class MultiKill(plugin.MenuItem):
 
     def __init__(self):
         plugin.MenuItem.__init__(self)
-        #self.entry = gtk.Window()
+        self.entry = Terminator().windows[0]
+        self.entry.connect('key-release-event', self.onKeyPress)
+        
 
     def callback(self, menuitems, menu, terminal):
-        #self.entry.connect('key-press-event', self.onKeyPress)
         item = gtk.MenuItem(_('MultiKill!'))
         item.connect("activate", self.multiKill)
         menuitems.append(item)
@@ -31,10 +32,6 @@ class MultiKill(plugin.MenuItem):
                 dbg('\033[1;31mMultikill failed: %s\033[0m' % ex)
                 pass
 
-    # def onKeyPress(self, widget, event):
-    #     dbg('\033[1;31m'+str(key)+'\033[0m')
-    #     if event.state == gtk.gdk.MOD1_MASK and (event.keyval == 67 or event.keyval == 99: # Alt+C or Alt+c
-    #         self.multiKill(self, widget)
-
-# TODO add keyboard shortcut
-# Commented out lines move towards that direction
+    def onKeyPress(self, widget, event):
+        if (event.state & gtk.gdk.MOD1_MASK == gtk.gdk.MOD1_MASK) and (event.keyval == 67 or event.keyval == 99): # Alt+C or Alt+c
+            self.multiKill(widget)
